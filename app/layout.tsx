@@ -1,9 +1,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SupportChatbox } from "@/components/support-chatbox";
+import { AuthProvider } from "@/app/context/AuthContext"; // ✅ Add this import
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <SupportChatbox />
-          <Toaster />
+          <AuthProvider> {/* ✅ Wrap your app here */}
+            {children}
+            <SupportChatbox />
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

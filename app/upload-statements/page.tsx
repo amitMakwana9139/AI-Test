@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = "force-dynamic";
 
 import { useState, useRef, useEffect } from "react"
 import type React from "react"
@@ -35,9 +36,9 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { useAuth } from "@/lib/hooks/useAuth"
+// import { useAuth } from "@/lib/hooks/useAuth"
+import { useAuth } from "@/app/context/AuthContext"
 
-export const dynamic = "force-dynamic"
 
 interface ExtractedTransaction {
   id: string
@@ -111,7 +112,7 @@ const BANK_OPTIONS: BankOption[] = [
     gradient: "from-blue-600 to-blue-700",
     icon: Landmark,
   },
-    {
+  {
     id: "nab",
     name: "NAB",
     logo: "/logos/nab.svg",
@@ -201,7 +202,7 @@ const triggerTransactionRefresh = () => {
   console.log("✅ Comprehensive refresh events dispatched")
 }
 
-export default function UploadStatementsPage() {
+function UploadStatementsPage() {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -233,17 +234,17 @@ export default function UploadStatementsPage() {
     })
   }, [user, loading])
 
-useEffect(() => {
-  if (files.some((file) => file.status === "error")) {
-    setShowErrorButton(true);
-    const timer = setTimeout(() => {
-      setShowErrorButton(false);
-    }, 1000);
+  useEffect(() => {
+    if (files.some((file) => file.status === "error")) {
+      setShowErrorButton(true);
+      const timer = setTimeout(() => {
+        setShowErrorButton(false);
+      }, 1000);
 
-    // Cleanup in case files change before 2s are up
-    return () => clearTimeout(timer);
-  }
-}, [files]);
+      // Cleanup in case files change before 2s are up
+      return () => clearTimeout(timer);
+    }
+  }, [files]);
 
 
 
@@ -334,11 +335,11 @@ useEffect(() => {
           processingTime: file.processingTime,
           metadata: file.metadata
             ? {
-                fileName: file.metadata.fileName,
-                fileSize: file.metadata.fileSize,
-                pageCount: file.metadata.pageCount,
-                textLength: 0,
-              }
+              fileName: file.metadata.fileName,
+              fileSize: file.metadata.fileSize,
+              pageCount: file.metadata.pageCount,
+              textLength: 0,
+            }
             : undefined,
           transactionCount: file.transactions?.length || 0,
         }))
@@ -371,11 +372,11 @@ useEffect(() => {
           processingTime: file.processingTime,
           metadata: file.metadata
             ? {
-                fileName: file.metadata.fileName,
-                fileSize: file.metadata.fileSize,
-                pageCount: file.metadata.pageCount,
-                textLength: 0,
-              }
+              fileName: file.metadata.fileName,
+              fileSize: file.metadata.fileSize,
+              pageCount: file.metadata.pageCount,
+              textLength: 0,
+            }
             : undefined,
           transactionCount: file.transactions?.length || 0,
         }))
@@ -1274,54 +1275,54 @@ useEffect(() => {
             </motion.div>
           )}
 
-{canContinue && (
-  <motion.div
-    initial={{ opacity: 0, y: 100 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4"
-  >
-    <Button
-      onClick={handleContinue}
-      size="lg"
-      className="h-16 px-12 text-lg font-semibold bg-gradient-to-r from-[#BEF397] to-[#7DD397] text-black hover:shadow-2xl shadow-lg transform hover:scale-105 transition-all duration-300 rounded-full"
-    >
-      <CheckCircle className="w-6 h-6 mr-3" />
-      View {totalTransactions} Transactions
-      <ChevronRight className="ml-3 w-6 h-6" />
-    </Button>
-  </motion.div>
-)}
+          {canContinue && (
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4"
+            >
+              <Button
+                onClick={handleContinue}
+                size="lg"
+                className="h-16 px-12 text-lg font-semibold bg-gradient-to-r from-[#BEF397] to-[#7DD397] text-black hover:shadow-2xl shadow-lg transform hover:scale-105 transition-all duration-300 rounded-full"
+              >
+                <CheckCircle className="w-6 h-6 mr-3" />
+                View {totalTransactions} Transactions
+                <ChevronRight className="ml-3 w-6 h-6" />
+              </Button>
+            </motion.div>
+          )}
 
-{files.some((file) => file.status === "error") && showErrorButton && (
-  <motion.div
-    initial={{ opacity: 0, y: 100 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4"
-  >
-    <Button
-      size="lg"
-      className="h-16 px-12 text-lg font-semibold bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-2xl shadow-lg transform hover:scale-105 transition-all duration-300 rounded-full"
-      onClick={() => {
-        const firstError = files.find((f) => f.status === "error");
-        if (firstError) {
-          const element = document.getElementById(firstError.id);
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        }
-      }}
-    >
-      <AlertCircle className="w-6 h-6 mr-3" />
-      Processing Failed
-    </Button>
-  </motion.div>
-)}
-
-
+          {files.some((file) => file.status === "error") && showErrorButton && (
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4"
+            >
+              <Button
+                size="lg"
+                className="h-16 px-12 text-lg font-semibold bg-gradient-to-r from-red-500 to-red-600 text-white hover:shadow-2xl shadow-lg transform hover:scale-105 transition-all duration-300 rounded-full"
+                onClick={() => {
+                  const firstError = files.find((f) => f.status === "error");
+                  if (firstError) {
+                    const element = document.getElementById(firstError.id);
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                  }
+                }}
+              >
+                <AlertCircle className="w-6 h-6 mr-3" />
+                Processing Failed
+              </Button>
+            </motion.div>
+          )}
 
 
 
-          
+
+
+
         </div>
 
         <Dialog open={showBankSelection} onOpenChange={setShowBankSelection}>
@@ -1543,82 +1544,84 @@ useEffect(() => {
         </Dialog>
 
         {/* Simplified Modern Deduction Review Popup */}
-     <Dialog open={showDeductionReviewPopup} onOpenChange={setShowDeductionReviewPopup}>
-        <DialogContent className="bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 backdrop-blur-xl border border-zinc-700/50 text-white max-w-md p-0 overflow-hidden">
-          {/* Compact Header */}
-          <div className="relative bg-gradient-to-r from-[#BEF397]/10 to-[#7DD3FC]/10 p-6 border-b border-zinc-700/50">
-            <div className="text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="w-12 h-12 bg-gradient-to-br from-[#BEF397] to-[#7DD3FC] rounded-xl flex items-center justify-center mx-auto mb-4"
-              >
-                <TrendingUp className="w-6 h-6 text-black" />
-              </motion.div>
-              <DialogTitle className="text-xl font-bold text-white mb-2">Deductions Found</DialogTitle>
-              <DialogDescription className="text-zinc-400 text-sm">
-                {pendingDeductionCount} potential deductions in {totalTransactions} transactions
-              </DialogDescription>
-            </div>
-          </div>
-
-          <div className="p-6">
-            {/* Compact Action Buttons */}
-            <div className="space-y-3 mb-6">
-              <h3 className="text-base font-medium text-white text-center mb-4">How would you like to proceed?</h3>
-
-              {/* Self Review */}
-              <button
-                onClick={handleDoItMyself}
-                className="w-full bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700 hover:border-[#BEF397]/50 rounded-lg p-4 text-left transition-all duration-200 group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-[#BEF397]/20 rounded-lg flex items-center justify-center">
-                    <Edit3 className="w-4 h-4 text-[#BEF397]" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-white text-sm">Review Myself</h4>
-                    <p className="text-xs text-zinc-400">Categorize transactions independently</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-[#BEF397]" />
-                </div>
-              </button>
-
-              {/* CPA Review */}
-              <button
-                onClick={handleAskCPA}
-                className="w-full bg-gradient-to-r from-amber-900/20 to-orange-900/20 hover:from-amber-900/30 hover:to-orange-900/30 border border-amber-500/30 hover:border-amber-400/50 rounded-lg p-4 text-left transition-all duration-200 group relative"
-              >
-                <div className="absolute top-2 right-2">
-                  <Badge className="bg-amber-500 text-black text-xs px-2 py-0.5">Premium</Badge>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                    <UserCheck className="w-4 h-4 text-amber-400" />
-                  </div>
-                  <div className="flex-1 pr-12">
-                    <h4 className="font-medium text-white text-sm">Get CPA Review</h4>
-                    <p className="text-xs text-zinc-400">Professional tax consultation</p>
-                    <p className="text-xs text-green-400 mt-1">Avg. $2,500+ extra savings</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-amber-400" />
-                </div>
-              </button>
+        <Dialog open={showDeductionReviewPopup} onOpenChange={setShowDeductionReviewPopup}>
+          <DialogContent className="bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-800 backdrop-blur-xl border border-zinc-700/50 text-white max-w-md p-0 overflow-hidden">
+            {/* Compact Header */}
+            <div className="relative bg-gradient-to-r from-[#BEF397]/10 to-[#7DD3FC]/10 p-6 border-b border-zinc-700/50">
+              <div className="text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="w-12 h-12 bg-gradient-to-br from-[#BEF397] to-[#7DD3FC] rounded-xl flex items-center justify-center mx-auto mb-4"
+                >
+                  <TrendingUp className="w-6 h-6 text-black" />
+                </motion.div>
+                <DialogTitle className="text-xl font-bold text-white mb-2">Deductions Found</DialogTitle>
+                <DialogDescription className="text-zinc-400 text-sm">
+                  {pendingDeductionCount} potential deductions in {totalTransactions} transactions
+                </DialogDescription>
+              </div>
             </div>
 
-            {/* Compact Footer */}
-            <div className="text-center pt-4 border-t border-zinc-800/50">
-              <button
-                onClick={() => setShowDeductionReviewPopup(false)}
-                className="text-zinc-500 hover:text-white text-sm transition-colors"
-              >
-                Skip for now
-              </button>
+            <div className="p-6">
+              {/* Compact Action Buttons */}
+              <div className="space-y-3 mb-6">
+                <h3 className="text-base font-medium text-white text-center mb-4">How would you like to proceed?</h3>
+
+                {/* Self Review */}
+                <button
+                  onClick={handleDoItMyself}
+                  className="w-full bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700 hover:border-[#BEF397]/50 rounded-lg p-4 text-left transition-all duration-200 group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[#BEF397]/20 rounded-lg flex items-center justify-center">
+                      <Edit3 className="w-4 h-4 text-[#BEF397]" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-white text-sm">Review Myself</h4>
+                      <p className="text-xs text-zinc-400">Categorize transactions independently</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-[#BEF397]" />
+                  </div>
+                </button>
+
+                {/* CPA Review */}
+                <button
+                  onClick={handleAskCPA}
+                  className="w-full bg-gradient-to-r from-amber-900/20 to-orange-900/20 hover:from-amber-900/30 hover:to-orange-900/30 border border-amber-500/30 hover:border-amber-400/50 rounded-lg p-4 text-left transition-all duration-200 group relative"
+                >
+                  <div className="absolute top-2 right-2">
+                    <Badge className="bg-amber-500 text-black text-xs px-2 py-0.5">Premium</Badge>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                      <UserCheck className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div className="flex-1 pr-12">
+                      <h4 className="font-medium text-white text-sm">Get CPA Review</h4>
+                      <p className="text-xs text-zinc-400">Professional tax consultation</p>
+                      <p className="text-xs text-green-400 mt-1">Avg. $2,500+ extra savings</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-amber-400" />
+                  </div>
+                </button>
+              </div>
+
+              {/* Compact Footer */}
+              <div className="text-center pt-4 border-t border-zinc-800/50">
+                <button
+                  onClick={() => setShowDeductionReviewPopup(false)}
+                  className="text-zinc-500 hover:text-white text-sm transition-colors"
+                >
+                  Skip for now
+                </button>
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )
 }
+
+export default UploadStatementsPage;
