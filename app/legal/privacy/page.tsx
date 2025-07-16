@@ -1,4 +1,6 @@
 "use client"
+export const dynamic = "force-dynamic";
+
 
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
@@ -117,14 +119,14 @@ export default function PrivacyPolicyPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4 mb-8"
         >
-<Button
-  onClick={() => router.push("/profile")}
-  variant="outline"
-  size="icon"
-  className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 bg-transparent"
->
-  <ArrowLeft className="w-4 h-4" />
-</Button>
+          <Button
+            onClick={() => router.push("/profile")}
+            variant="outline"
+            size="icon"
+            className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 bg-transparent"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
           <div>
             <h1 className="text-3xl lg:text-4xl font-bold text-white">Privacy Policy</h1>
             <p className="text-zinc-400">How we collect, use, and protect your information</p>
